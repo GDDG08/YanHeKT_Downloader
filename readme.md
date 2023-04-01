@@ -1,6 +1,6 @@
 # 北理工延河课堂视频下载
 
-##　功能介绍
+## 功能介绍
 
 下载[延河课堂](https://www.yanhekt.cn/)的录播视频
 
@@ -21,7 +21,7 @@
    pip install -r requirements.txt
    ```
 
-3. 确保命令行环境有ffmpeg，本仓库也附带了可执行文件
+3. 确保命令行环境有ffmpeg，本仓库的release也附带了ffmpeg(仅exe)
 
 4. [optional]由于视频加密解算，需要运行js，如果遇到js执行报错（Windows平台），请安装[node.js](https://nodejs.org/en)
 
