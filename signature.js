@@ -1,13 +1,13 @@
 /*
  * @Project      : 
- * @FilePath     : \BIT-YANHE\signature.js
+ * @FilePath     : \OPENSOURCE\signature.js
  * @Descripttion : 
  * @Author       : GDDG08
  * @Date         : 2022-11-06 22:29:53
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-11-07 11:16:50
+ * @LastEditTime : 2023-04-20 23:09:50
  */
-global.navigator = { userAgent: 'node.js' };
+navigator = { userAgent: 'node.js' };
 
 function C() {
     function e(e, t, n, a) {

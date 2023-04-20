@@ -1,2 +1,2 @@
 requests
-PyExecJS
+js2py
