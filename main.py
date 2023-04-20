@@ -5,7 +5,7 @@ Descripttion :
 Author       : GDDG08
 Date         : 2022-11-08 02:07:44
 LastEditors  : GDDG08
-LastEditTime : 2022-12-03 22:17:30
+LastEditTime : 2023-04-10 15:58:57
 '''
 import requests
 import m3u8dl
@@ -29,7 +29,7 @@ if __name__ == '__main__':
 
     videoList = req.json()['data']
     for i, c in enumerate(videoList):
-        print(i, c['section_group_title'])
+        print(i, c['title'])
 
 
     # index = eval('[' + input('select(split by \',\'):') + ']')
@@ -42,7 +42,7 @@ if __name__ == '__main__':
 
     for i in index:
         c = videoList[i]
-        fileName = str(courseID) + '-' + c['section_group_title']
+        fileName = str(courseID) + '-' + c['title']
         print(fileName)
         if vga == "vga":
             m3u8dl.M3u8Download(c['videos'][0]['vga'], dirName, fileName + '-VGA', max_workers=4)
