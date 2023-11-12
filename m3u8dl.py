@@ -1,11 +1,11 @@
 '''
 Project      :
-FilePath     : \FINAL\m3u8dl.py
+FilePath     : \OPENSOURCE\m3u8dl.py
 Descripttion :
 Author       : GDDG08
 Date         : 2022-11-07 12:09:26
 LastEditors  : GDDG08
-LastEditTime : 2022-12-03 22:22:20
+LastEditTime : 2023-11-12 20:32:53
 '''
 import os
 import re
@@ -47,7 +47,7 @@ class M3u8Download:
     :param base64_key: base64编码的字符串
     """
 
-    def __init__(self, url, workDir, name, max_workers=64, num_retries=5, base64_key=None):
+    def __init__(self, url, workDir, name, max_workers=64, num_retries=16, base64_key=None):
 
         self._url = url
         self._token = None
@@ -78,6 +78,7 @@ class M3u8Download:
 
         self._url = self._signJs.encryptURL(self._url)
 
+        self.refreshSignature()
         self.get_m3u8_info(self._url, self._num_retries)
         print('Downloading: %s' % self._name, 'Save path: %s' % self._file_path, sep='\n')
         with ThreadPoolExecutorWithQueueSizeLimit(self._max_workers) as pool:
@@ -93,6 +94,10 @@ class M3u8Download:
         signature = self._signJs.getSignature(timestamp)
         # print(timestamp, signature)
         return timestamp, signature
+
+    def refreshSignature(self):
+        self.token = self.getToken()
+        self.timestamp, self.signature = self.getSignature()
 
     def getToken(self):
         if self._token == None:
@@ -113,10 +118,8 @@ class M3u8Download:
         获取m3u8信息
         """
 
-        token = self.getToken()
-        timestamp, signature = self.getSignature()
-        url = m3u8_url+"?Xvideo_Token="+token+"&Xclient_Timestamp=" + timestamp+"&Xclient_Signature=" + \
-            signature+"&Xclient_Version=v1&Platform=yhkt_user"
+        url = m3u8_url+"?Xvideo_Token="+self.token+"&Xclient_Timestamp=" + self.timestamp+"&Xclient_Signature=" + \
+            self.signature+"&Xclient_Version=v1&Platform=yhkt_user"
         try:
             with requests.get(url, timeout=(3, 30), verify=False, headers=self._headers) as res:
                 self._front_url = res.url.split(res.request.path_url)[0]
@@ -179,10 +182,8 @@ class M3u8Download:
         """
         下载 .ts 文件
         """
-        token = self.getToken()
-        timestamp, signature = self.getSignature()
-        ts_url = ts_url.split('\n')[0]+"?Xvideo_Token="+token+"&Xclient_Timestamp=" + \
-            timestamp+"&Xclient_Signature="+signature+"&Xclient_Version=v1&Platform=yhkt_user"
+        ts_url = ts_url.split('\n')[0]+"?Xvideo_Token="+self.token+"&Xclient_Timestamp=" + \
+            self.timestamp+"&Xclient_Signature="+self.signature+"&Xclient_Version=v1&Platform=yhkt_user"
         try:
             if not os.path.exists(name):
                 with requests.get(ts_url, stream=True, timeout=(5, 60), verify=False, headers=self._headers) as res:
@@ -196,6 +197,7 @@ class M3u8Download:
                                                                self._success_sum, self._ts_sum))
                         sys.stdout.flush()
                     else:
+                        self.refreshSignature()
                         self.download_ts(ts_url, name, num_retries - 1)
             else:
                 self._success_sum += 1
@@ -267,4 +269,4 @@ if __name__ == "__main__":
     #                  # base64_key='5N12sDHDVcx1Hqnagn4NJg=='
     #                  )
     pass
-    #M3u8Download("https://*.m3u8", "./", "test.mp4")
+    # M3u8Download("https://*.m3u8", "./", "test.mp4")

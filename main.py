@@ -31,7 +31,6 @@ if __name__ == '__main__':
     for i, c in enumerate(videoList):
         print(i, c['title'])
 
-
     # index = eval('[' + input('select(split by \',\'):') + ']')
     index = eval(input())
     vga = input('video or vga?(default video):')
@@ -45,6 +44,6 @@ if __name__ == '__main__':
         fileName = str(courseID) + '-' + c['title']
         print(fileName)
         if vga == "vga":
-            m3u8dl.M3u8Download(c['videos'][0]['vga'], dirName, fileName + '-VGA', max_workers=4)
+            m3u8dl.M3u8Download(c['videos'][0]['vga'], dirName, fileName + '-VGA', max_workers=32)
         else:
-            m3u8dl.M3u8Download(c['videos'][0]['main'], dirName, fileName+'-Video', max_workers=4)
+            m3u8dl.M3u8Download(c['videos'][0]['main'], dirName, fileName+'-Video', max_workers=64)
