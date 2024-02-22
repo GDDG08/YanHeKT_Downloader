@@ -41,36 +41,19 @@
    在课程详情页，注意不是视频播放页，`https://www.yanhekt.cn/course/11111`，从url中获得课程id，如`11111`。
 
 2. 运行脚本
+   下载发布的zip文件，解压缩到某个文件夹内，会有3个文件：signature.js、start.bat、YanHeKT_Downloader_1.2.2.exe。
+   
+   连续批量下载：
+   start.bat中写入需要连续下载的课程id，用文本编辑器打开修改即可，保存后退出，双击bat文件即可快速批量下载，会自动下载全部列表中的视频，包括电脑投影(vga)和监视器视频(video)。
 
-   ```
-   python main.py 11111 
-   ```
+   单个下载：
+   也可以双击exe文件直接单个使用，输入课程编号即可，会下载该课程的全部录屏，包括电脑投影(vga)和监视器视频(video)。
 
-3. 程序自动获取课程信息，打印视频列表
-
-4. 输入要下载的视频序号，这里请直接提供列表或使用range（我懒得写匹配，直接用eval）
-
-   ```python
-   # 支持的格式
-   [1,2,3]
-   [1,4,5]
-   range(13)
-   range(3, 6)
-   ```
-
-5. 选择下载投影录屏(vga)或者教室录像(video)
-
-   ```python
-   # 示例输入
-   # NULL | ILLEGAL -> video
-   vga
-   video
-   ```
-
-6. enjoy
+3. enjoy
 
 
 
 ## 致谢
 
 - [M3u8Download](https://github.com/anwenzen/M3u8Download)
+- https://github.com/GDDG08/YanHeKT_Downloader
