@@ -31,7 +31,7 @@
    在课程详情页，注意不是视频播放页，`https://www.yanhekt.cn/course/11111`，从url中获得课程id，如`11111`。
 
 2. 运行脚本
-   下载发布的zip文件，解压缩到某个文件夹内，会有3个文件：signature.js、start.bat、YanHeKT_Downloader_1.2.2.exe。
+   下载zip文件，解压缩到某个文件夹内，会有4个文件：signature.js、start.bat、YanHeKT_Downloader_1.2.2.exe、ffmpeg.exe。
    
    连续批量下载：
    start.bat中写入需要连续下载的课程id，用文本编辑器打开修改即可，保存后退出，双击bat文件即可快速批量下载，会自动下载全部列表中的视频，包括电脑投影(vga)和监视器视频(video)。
