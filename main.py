@@ -57,4 +57,4 @@ if __name__ == '__main__':
             print(f"Downloading Video for {fileName}")
             m3u8dl.M3u8Download(c['videos'][0]['main'], dirName, fileName + '-Video', max_workers=64)
 
-    input("按 Enter 键退出...")
+    # input("按 Enter 键退出...")
