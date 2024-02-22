@@ -20,19 +20,8 @@
 
 ## 使用前准备
 
-1. 下载/克隆本仓库或release
+1. 下载发布的zip文件，解压缩到某个文件夹内，会有3个文件：signature.js、start.bat、YanHeKT_Downloader_1.2.2.exe。
 
-2. 安装python依赖包
-
-   ```shell
-   pip install -r requirements.txt
-   ```
-
-3. 确保命令行环境有ffmpeg，本仓库的release也附带了ffmpeg(仅exe)
-
-   如果最终视频没有合并，说明ffmpeg环境存在问题
-
-4. (1.1后版本忽略)~~[optional]由于视频加密解算，需要运行js，如果遇到js执行报错，请安装[node.js](https://nodejs.org/en)~~
 
 ## 食用方法
 
