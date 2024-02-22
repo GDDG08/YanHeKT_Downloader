@@ -1,7 +1,7 @@
 '''
-Project      : 
+Project      :
 FilePath     : \FINAL\main.py
-Descripttion : 
+Descripttion :
 Author       : GDDG08
 Date         : 2022-11-08 02:07:44
 LastEditors  : GDDG08
@@ -11,6 +11,7 @@ import requests
 import m3u8dl
 import sys
 import os
+
 headers = {
     'Origin': 'https://www.yanhekt.cn',
     "xdomain-client": "web_user",
@@ -19,31 +20,41 @@ headers = {
 
 
 if __name__ == '__main__':
-    courseID = sys.argv[1]
+
+    # 这段代码会首先检查是否有命令行参数提供；如果没有，就会提示用户输入课程ID。
+    if len(sys.argv) > 1:
+        courseID = sys.argv[1]
+    else:
+        courseID = input("请输入课程ID: ")
 
     course = requests.get(
         f'https://cbiz.yanhekt.cn/v1/course?id={courseID}&with_professor_badges=true', headers=headers)
     req = requests.get(f'https://cbiz.yanhekt.cn/v2/course/session/list?course_id={courseID}', headers=headers)
-    # print(course.json())
     print(course.json()['data']['name_zh'])
 
     videoList = req.json()['data']
     for i, c in enumerate(videoList):
         print(i, c['title'])
 
-    # index = eval('[' + input('select(split by \',\'):') + ']')
-    index = eval(input())
-    vga = input('video or vga?(default video):')
-    dirName = r'./'+course.json()['data']['name_zh'] + '-' + course.json()['data']['professors'][0]['name']
+    dirName = r'./' + course.json()['data']['name_zh'] + '-' + course.json()['data']['professors'][0]['name']
 
     if not os.path.exists(dirName):
         os.makedirs(dirName)
 
-    for i in index:
+    # 自动遍历下载所有视频，并分别下载投影录屏(vga)和视频(video)格式
+    for i, c in enumerate(videoList):
         c = videoList[i]
-        fileName = str(courseID) + '-' + c['title']
-        print(fileName)
-        if vga == "vga":
+        fileName = str(courseID) + '-' + c['title'].replace("/", "-")  # 防止文件名中的/导致路径错误
+        print(f"Downloading {fileName}")
+
+        # 下载投影录屏
+        if 'vga' in c['videos'][0]:  # 检查是否存在vga链接
+            print(f"Downloading VGA for {fileName}")
             m3u8dl.M3u8Download(c['videos'][0]['vga'], dirName, fileName + '-VGA', max_workers=32)
-        else:
-            m3u8dl.M3u8Download(c['videos'][0]['main'], dirName, fileName+'-Video', max_workers=64)
+
+        # 下载视频
+        if 'main' in c['videos'][0]:  # 检查是否存在main链接
+            print(f"Downloading Video for {fileName}")
+            m3u8dl.M3u8Download(c['videos'][0]['main'], dirName, fileName + '-Video', max_workers=64)
+
+    # input("按 Enter 键退出...")
