@@ -31,10 +31,26 @@
    - **详见 #食用方法**
    - 优化ffmpeg输出
 
-
 ## 使用前准备
 
-1. 下载/克隆本仓库或release
+### 方法一：现已通过Pypi发布（推荐）
+
+https://pypi.org/project/yanhekt/
+
+- 安装`yanhekt`
+
+    ```shell
+    pip install yanhekt
+    ```
+
+- **确保命令行环境有ffmpeg**
+  - 相关安装请自行搜索
+    - Windows下载后，添加环境变量即可
+  - 如果最终视频没有合并，说明ffmpeg环境存在问题
+
+### 方法二：使用源代码
+
+1. 下载/克隆本仓库或下载 [Releases](https://github.com/GDDG08/YanHeKT_Downloader/releases/latest)
 
 2. 安装python依赖包
 
@@ -43,13 +59,18 @@
    # (其实就一个requests)
    ```
 
-3. 确保命令行环境有ffmpeg，本仓库的release也附带了ffmpeg(仅exe)
+3. **确保命令行环境（或者代码文件夹内）有ffmpeg**
 
-   如果最终视频没有合并，说明ffmpeg环境存在问题
+   - 本仓库的release附带了ffmpeg(仅exe)
+   - 相关安装请自行搜索
+     - Windows简单的方法：下载后拷贝到代码文件夹内
 
-4. (1.1后版本忽略)~~[optional]由于视频加密解算，需要运行js，如果遇到js执行报错，请安装[node.js](https://nodejs.org/en)~~
+   - 如果最终视频没有合并，说明ffmpeg环境存在问题
+
 
 ## 食用方法
+
+***注意：如果使用[本地源代码](#方法二：使用源代码)安装，请将本节中的`yanhekt`替换为`python main.py`***
 
 1. 获取课程ID
 
@@ -65,7 +86,7 @@
 
        ```shell
        # 例：查看课程信息及视频列表
-       python main.py 11111
+       yanhekt 11111
        ```
 
    - **选择下载的课时序号**
@@ -75,8 +96,8 @@
      - `--range 3 5`，下载一个范围内的课时
        ```shell
        # 例：下载第3-8节课
-       python main.py 11111 --range 3 9
-       python main.py 11111 -L 3 9
+       yanhekt 11111 --range 3 9
+       yanhekt 11111 -L 3 9
        ```
 
    - **选择下载的视频类型**
@@ -86,7 +107,7 @@
      - `--video`，仅下载教室视频
        ```shell
        # 例：下载第3-8节课，仅下载电脑录屏
-       python main.py 11111 --range 3 9 --vga
+       yanhekt 11111 --range 3 9 --vga
        ```
 
    - 增量下载
@@ -94,13 +115,13 @@
      - `--skip`，跳过已下载，仅下载新上传的视频
        ```shell
        # 例：定期更新课程全部视频
-       python main.py 11111 --all --skip
+       yanhekt 11111 --all --skip
        ```
 
 3. 更多高级用法请参考命令行提示
 
    ```shell
-   !python main.py --help
+   !yanhekt --help
    
    # usage: main.py [-h] [-A | -L i [i ...] | -R i i] [-D | -G | -V] [-S] [--dir DIR] [--max-workers num] courseID
    
@@ -134,14 +155,26 @@
 
 4. **ENJOY !**
 
-   
+
+
+## 作为python包使用
+
+仍处于初期开发阶段，欢迎提功能需求和PR
+
+```python
+from yanhekt import YHKTDown
+
+YHKTDown(25555, _all=True, _dual=True, _skip=True, _dir='./')
+```
+
+
 
 ## Todo（画大饼）
 
-- @ZJC-GH 同学添加了批量下载功能
-   - 有需要的同学可以到[这个仓库](https://github.com/ZJC-GH/YanHeKT_Downloader) release中下载使用
-   - 目前已合并到dev分支
-- 计划使用`argparse`完善命令行参数，优化下交互体验
+- ~~@ZJC-GH 同学添加了批量下载功能~~
+   - ~~有需要的同学可以到[这个仓库](https://github.com/ZJC-GH/YanHeKT_Downloader) release中下载使用~~
+   - ~~目前已合并到dev分支~~
+- ~~计划使用`argparse`完善命令行参数，优化下交互体验~~(2.2.0已实现)
 - （超大饼）在参数写完后整个简单的gui
 
 
