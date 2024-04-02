@@ -2,6 +2,8 @@
 
 欢迎Star🌟！欢迎提Issue
 
+本项目在 网协2023“十行代码”比赛 荣获**特等奖**🎉 指路👉[Github](https://github.com/BITNP/poems-2023/)
+
 ## 功能介绍
 
 下载[延河课堂](https://www.yanhekt.cn/)的录播视频
@@ -17,30 +19,69 @@
 - 2023-4-20 更改js执行方式，无需安装nodejs
 - 2023-11-12 签名效率优化，优化下载速度
    - 理论可以跑满千兆有线网，可以根据电脑性能修改max_workers数量
-- 2024-02-22 自动批量下载，vga和video自动都下载。增加exe、bat文件，方便直接运行和批量运行。
+- **2024-4-2 (🌟)更改signature实现方式**
+   - 放弃js执行，不再使用js2py，提升兼容性 [issue#5](https://github.com/GDDG08/YanHeKT_Downloader/issues/5)
+   - 现在时间sign和url后缀 都是py原生
 
 ## 使用前准备
 
-1. 下载发布的zip文件，解压缩到某个文件夹内，会有3个文件：signature.js、start.bat、YanHeKT_Downloader_1.2.2.exe。
+1. 下载/克隆本仓库或release
 
+2. 安装python依赖包
+
+   ```shell
+   pip install -r requirements.txt
+   # (其实就一个requests)
+   ```
+
+3. 确保命令行环境有ffmpeg，本仓库的release也附带了ffmpeg(仅exe)
+
+   如果最终视频没有合并，说明ffmpeg环境存在问题
+
+4. (1.1后版本忽略)~~[optional]由于视频加密解算，需要运行js，如果遇到js执行报错，请安装[node.js](https://nodejs.org/en)~~
 
 ## 食用方法
 
 1. 获取课程ID
 
-   在课程详情页，注意不是视频播放页，`https://www.yanhekt.cn/course/11111`，从url中获得课程id，如`11111`。
+   在课程详情页，**注意不是视频播放页**，`https://www.yanhekt.cn/course/11111`，从url中获得课程id，如`11111`。
 
 2. 运行脚本
-   下载zip文件，解压缩到某个文件夹内，会有4个文件：signature.js、start.bat、YanHeKT_Downloader_1.2.2.exe、ffmpeg.exe。
-   
-   连续批量下载：
-   start.bat中写入需要连续下载的课程id，用文本编辑器打开修改即可，保存后退出，双击bat文件即可快速批量下载，会自动下载全部列表中的视频，包括电脑投影(vga)和监视器视频(video)。
 
-   单个下载：
-   也可以双击exe文件直接单个使用，输入课程编号即可，会下载该课程的全部录屏，包括电脑投影(vga)和监视器视频(video)。
+   ```
+   python main.py 11111 
+   ```
 
-3. enjoy
+3. 程序自动获取课程信息，打印视频列表
 
+4. 输入要下载的视频序号，这里请直接提供列表或使用range（我懒得写匹配，直接用eval）
+
+   ```python
+   # 支持的格式
+   [1,2,3]
+   [1,4,5]
+   range(13)
+   range(3, 6)
+   ```
+
+5. 选择下载投影录屏(vga)或者教室录像(video)
+
+   ```python
+   # 示例输入
+   # NULL | ILLEGAL -> video
+   vga
+   video
+   ```
+
+6. enjoy
+
+## Todo（画大饼）
+
+- @ZJC-GH 同学添加了批量下载功能
+   - 有需要的同学可以到[这个仓库](https://github.com/ZJC-GH/YanHeKT_Downloader) release中下载使用
+   - 目前已合并到dev分支
+- 计划使用`argparse`完善命令行参数，优化下交互体验
+- （超大饼）在参数写完后整个简单的gui
 
 
 ## 致谢
