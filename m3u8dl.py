@@ -5,7 +5,7 @@ Descripttion :
 Author       : GDDG08
 Date         : 2022-11-07 12:09:26
 LastEditors  : GDDG08
-LastEditTime : 2023-11-12 20:32:53
+LastEditTime : 2024-04-02 10:37:04
 '''
 import os
 import re
@@ -15,9 +15,9 @@ import base64
 import platform
 import requests
 import urllib3
-import js2py
 import time
 from concurrent.futures import ThreadPoolExecutor
+from hashlib import md5
 
 
 class ThreadPoolExecutorWithQueueSizeLimit(ThreadPoolExecutor):
@@ -68,17 +68,10 @@ class M3u8Download:
 
         urllib3.disable_warnings()
 
-        js = ''
-        # with open(os.path.dirname(sys.argv[0])+"/signature.js", 'r', encoding='UTF-8') as f:
-        with open("./signature.js", 'r', encoding='UTF-8') as f:
-            js = f.read()
+        self.sign_prefix = "1tJrMwNq3h0yLgx86Rued2J1tFc"
+        self._url = self.encryptURL(self._url)
+        # self.refreshSignature()
 
-        self._signJs = js2py.EvalJs()
-        self._signJs.execute(js)
-
-        self._url = self._signJs.encryptURL(self._url)
-
-        self.refreshSignature()
         self.get_m3u8_info(self._url, self._num_retries)
         print('Downloading: %s' % self._name, 'Save path: %s' % self._file_path, sep='\n')
         with ThreadPoolExecutorWithQueueSizeLimit(self._max_workers) as pool:
@@ -91,13 +84,25 @@ class M3u8Download:
 
     def getSignature(self):
         timestamp = str(int(time.time()))
-        signature = self._signJs.getSignature(timestamp)
+        sign_org = "_".join([self.sign_prefix, 'v1', timestamp])
+        signature = md5(sign_org.encode()).hexdigest()
         # print(timestamp, signature)
         return timestamp, signature
 
     def refreshSignature(self):
         self.token = self.getToken()
         self.timestamp, self.signature = self.getSignature()
+
+    def encryptURL(self, url):
+        sign_org = "_".join([self.sign_prefix, '100'])
+        signature = md5(sign_org.encode()).hexdigest()
+
+        index = url.rfind('/')
+        if index > -1:
+            l = url[:index]
+            r = url[index:]
+            return l + '/' + signature + r
+        return url
 
     def getToken(self):
         if self._token == None:
@@ -117,7 +122,7 @@ class M3u8Download:
         """
         获取m3u8信息
         """
-
+        self.refreshSignature()
         url = m3u8_url+"?Xvideo_Token="+self.token+"&Xclient_Timestamp=" + self.timestamp+"&Xclient_Signature=" + \
             self.signature+"&Xclient_Version=v1&Platform=yhkt_user"
         try:
@@ -182,6 +187,8 @@ class M3u8Download:
         """
         下载 .ts 文件
         """
+
+        self.refreshSignature()
         ts_url = ts_url.split('\n')[0]+"?Xvideo_Token="+self.token+"&Xclient_Timestamp=" + \
             self.timestamp+"&Xclient_Signature="+self.signature+"&Xclient_Version=v1&Platform=yhkt_user"
         try:

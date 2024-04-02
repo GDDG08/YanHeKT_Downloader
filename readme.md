@@ -2,6 +2,8 @@
 
 欢迎Star🌟！欢迎提Issue
 
+本项目在 网协2023“十行代码”比赛 荣获特等奖🎉 指路👉[Github](https://github.com/BITNP/poems-2023/)
+
 ## 功能介绍
 
 下载[延河课堂](https://www.yanhekt.cn/)的录播视频
@@ -17,6 +19,9 @@
 - 2023-4-20 更改js执行方式，无需安装nodejs
 - 2023-11-12 签名效率优化，优化下载速度
    - 理论可以跑满千兆有线网，可以根据电脑性能修改max_workers数量
+- 2024-4-2 (🌟)更改signature实现方式
+   - 放弃js执行，不再使用js2py，提升兼容性 [issue#5](https://github.com/GDDG08/YanHeKT_Downloader/issues/5)
+   - 现在时间sign和url后缀 都是py原生
 
 ## 使用前准备
 
@@ -26,6 +31,7 @@
 
    ```shell
    pip install -r requirements.txt
+   # (其实就一个requests)
    ```
 
 3. 确保命令行环境有ffmpeg，本仓库的release也附带了ffmpeg(仅exe)
@@ -69,6 +75,13 @@
 
 6. enjoy
 
+## Todo（画大饼）
+
+- @ZJC-GH 同学添加了批量下载功能，
+   - 有需要的同学可以到[这个仓库](https://github.com/ZJC-GH/YanHeKT_Downloader) release中下载使用
+   - 目前已合并到dev分支
+- 计划使用`argparse`完善命令行参数，优化下交互体验
+- （超大饼）在参数写完后整个简单的gui
 
 
 ## 致谢
