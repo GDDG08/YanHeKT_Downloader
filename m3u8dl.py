@@ -5,7 +5,7 @@ Descripttion :
 Author       : GDDG08
 Date         : 2022-11-07 12:09:26
 LastEditors  : GDDG08
-LastEditTime : 2024-04-02 10:37:04
+LastEditTime : 2024-04-02 16:30:46
 '''
 import os
 import re
@@ -55,7 +55,7 @@ class M3u8Download:
         self._max_workers = max_workers
         self._num_retries = num_retries
         self._workDir = os.path.join(workDir, self._name)
-        self._file_path = os.path.join(os.getcwd(), self._name)
+        self._file_path = os.path.join(os.getcwd(), "temp", self._name)
         self._front_url = None
         self._ts_url_list = []
         self._success_sum = 0
@@ -73,14 +73,14 @@ class M3u8Download:
         # self.refreshSignature()
 
         self.get_m3u8_info(self._url, self._num_retries)
-        print('Downloading: %s' % self._name, 'Save path: %s' % self._file_path, sep='\n')
+        # print('Downloading: %s' % self._name, 'Save path: %s' % self._file_path, sep='\n')
         with ThreadPoolExecutorWithQueueSizeLimit(self._max_workers) as pool:
             for k, ts_url in enumerate(self._ts_url_list):
                 pool.submit(self.download_ts, ts_url, os.path.join(self._file_path, str(k)), self._num_retries)
         if self._success_sum == self._ts_sum:
             self.output_mp4()
             self.delete_file()
-            print(f"Download successfully --> {self._name}")
+            print("SUCCESS")
 
     def getSignature(self):
         timestamp = str(int(time.time()))
@@ -152,7 +152,7 @@ class M3u8Download:
         获取每一个ts文件的链接
         """
         if not os.path.exists(self._file_path):
-            os.mkdir(self._file_path)
+            os.makedirs(self._file_path)
         new_m3u8_str = ''
         ts = make_sum()
         for line in m3u8_text_str.split('\n'):
@@ -249,7 +249,7 @@ class M3u8Download:
         合并.ts文件，输出mp4格式视频，需要ffmpeg
         """
         #
-        cmd = f'''ffmpeg -allowed_extensions ALL -i "{self._file_path}.m3u8" -acodec \
+        cmd = f'''ffmpeg -y -loglevel quiet -allowed_extensions ALL -i "{self._file_path}.m3u8" -acodec \
         copy -vcodec copy -f mp4 "{self._workDir}.mp4"'''
         # print(cmd)
         os.system(cmd)

@@ -22,6 +22,15 @@
 - **2024-4-2 (🌟)更改signature实现方式**
    - 放弃js执行，不再使用js2py，提升兼容性 [issue#5](https://github.com/GDDG08/YanHeKT_Downloader/issues/5)
    - 现在时间sign和url后缀 都是py原生
+- 2024-4-2 (🌟)更改交互方式，添加完整的**命令行参数**
+   - 支持一次下载全部课时，感谢@ZJC-GH同学的建议和pr
+   - 支持分别或同时下载VGA和Video
+   - 支持增量下载，自动跳过已下载文件
+   - 更改临时文件存储位置，放在`temp`中
+   - 可以自定义输出文件夹位置
+   - **详见 #食用方法**
+   - 优化ffmpeg输出
+
 
 ## 使用前准备
 
@@ -44,36 +53,88 @@
 
 1. 获取课程ID
 
-   在课程详情页，**注意不是视频播放页**，`https://www.yanhekt.cn/course/11111`，从url中获得课程id，如`11111`。
+   在课程详情页，**注意不是视频播放页**，如`https://www.yanhekt.cn/course/11111`，
 
-2. 运行脚本
+   从url中获得课程id，如`11111`
 
+2. 命令行参数
+
+   - **指定课程的ID**
+
+     - `<courseID>`，直接给出
+
+       ```shell
+       # 例：查看课程信息及视频列表
+       python main.py 11111
+       ```
+
+   - **选择下载的课时序号**
+
+     - `--all`，下载全部课时
+     - `--list 0 2 4 `，下载选定的课时列表
+     - `--range 3 5`，下载一个范围内的课时
+       ```shell
+       # 例：下载第3-8节课
+       python main.py 11111 --range 3 9
+       python main.py 11111 -L 3 9
+       ```
+
+   - **选择下载的视频类型**
+
+     - `--dual`，同时下载电脑录屏和教室视频**（默认）**
+     - `--vga `，仅下载电脑录屏
+     - `--video`，仅下载教室视频
+       ```shell
+       # 例：下载第3-8节课，仅下载电脑录屏
+       python main.py 11111 --range 3 9 --vga
+       ```
+
+   - 增量下载
+
+     - `--skip`，跳过已下载，仅下载新上传的视频
+       ```shell
+       # 例：定期更新课程全部视频
+       python main.py 11111 --all --skip
+       ```
+
+3. 更多高级用法请参考命令行提示
+
+   ```shell
+   !python main.py --help
+   
+   # usage: main.py [-h] [-A | -L i [i ...] | -R i i] [-D | -G | -V] [-S] [--dir DIR] [--max-workers num] courseID
+   
+   # GDDG08/YanHeKT_Downloader
+   
+   # positional arguments:
+   # courseID              Course ID of YanHeKT
+   
+   # options:
+   # -h, --help            show this help message and exit
+   
+   # Lesson Selection:
+   # IF NONE, PRINT LESSON LIST AND EXIT.
+   
+   # -A, --all             Download all lessons
+   # -L i [i ...], --list i [i ...]
+   #                         Select of lesson index (e.g., --list 1 2 4)
+   # -R i i, --range i i   Select range of lessons (e.g., --range 3 5 for [3,5))
+   
+   # Video Type:
+   # -D, --dual            Download both VGA(PC) and Video (default)
+   # -G, --vga             Download VGA(PC) only
+   # -V, --video           Download Video only
+   
+   # Configurations:
+   # -S, --skip            Skip existing files
+   # --dir DIR             Output directory (e.g., --dir ./output)
+   # --max-workers num     Max workers for downloading (default: 32)
+   
    ```
-   python main.py 11111 
-   ```
 
-3. 程序自动获取课程信息，打印视频列表
+4. **ENJOY !**
 
-4. 输入要下载的视频序号，这里请直接提供列表或使用range（我懒得写匹配，直接用eval）
-
-   ```python
-   # 支持的格式
-   [1,2,3]
-   [1,4,5]
-   range(13)
-   range(3, 6)
-   ```
-
-5. 选择下载投影录屏(vga)或者教室录像(video)
-
-   ```python
-   # 示例输入
-   # NULL | ILLEGAL -> video
-   vga
-   video
-   ```
-
-6. enjoy
+   
 
 ## Todo（画大饼）
 
@@ -87,4 +148,3 @@
 ## 致谢
 
 - [M3u8Download](https://github.com/anwenzen/M3u8Download)
-- https://github.com/GDDG08/YanHeKT_Downloader

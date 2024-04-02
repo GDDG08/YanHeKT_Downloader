@@ -1,3 +1,8 @@
 *.zip
 __pycache__
 .vscode/
+
+temp/
+output/
+
+test.sh
