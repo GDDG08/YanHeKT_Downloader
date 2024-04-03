@@ -91,7 +91,7 @@ https://pypi.org/project/yanhekt/
 
    <img src="assets/image-20240403163924034.png" width="250px"/>
 
-   - 扔进链接或者courseID（可Ctrl-C V)
+   - 扔进链接或者courseID（可Ctrl-C V）
    - 获取课程信息
    - 随意选择课时（Ctrl、Shift、鼠标拖拽都可多选）
    - 设置一些参数，比如要下载什么视频

@@ -5,7 +5,7 @@ Descripttion :
 Author       : GDDG08
 Date         : 2022-11-08 02:07:44
 LastEditors  : GDDG08
-LastEditTime : 2024-04-03 16:03:17
+LastEditTime : 2024-04-03 23:12:54
 '''
 import requests
 from m3u8dl import M3u8Download
@@ -96,7 +96,7 @@ class YanHeKT():
             videos = video['videos'][0]
             # 下载投影录屏
             if self.vga or self.dual:
-                if 'vga' in videos:  # 检查是否存在vga链接
+                if 'vga' in videos and videos['vga']:  # 检查是否存在vga链接
                     if self.skip and os.path.exists(f"{dirName}/{fileName}-VGA.mp4"):
                         print(f"VGA seems already done. Skipping...")
                     else:
@@ -107,7 +107,7 @@ class YanHeKT():
 
             # 下载视频
             if self.video or self.dual:
-                if 'main' in videos:  # 检查是否存在main链接
+                if 'main' in videos and videos['main']:  # 检查是否存在main链接
                     if self.skip and os.path.exists(f"{dirName}/{fileName}-Video.mp4"):
                         print(f"Video seems already done. Skipping...")
                     else:
