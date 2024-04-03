@@ -1,23 +1,16 @@
 '''
-Project      :
+Project      : 
 FilePath     : \OPENSOURCE\main.py
-Descripttion :
+Descripttion : 
 Author       : GDDG08
 Date         : 2022-11-08 02:07:44
 LastEditors  : GDDG08
-LastEditTime : 2024-04-02 20:03:57
+LastEditTime : 2024-04-03 16:10:23
 '''
-import requests
-from m3u8dl import M3u8Download
 import sys
-import os
 import argparse
-
-headers = {
-    'Origin': 'https://www.yanhekt.cn',
-    "xdomain-client": "web_user",
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.26'
-}
+from gui import GUI
+from yanhekt import YanHeKT
 
 
 def configArgs():
@@ -66,85 +59,36 @@ def printArgs(args):
     print(f"Video Type: {'VGA & Video' if args.dual else 'VGA' if args.vga else 'Video'}")
     print(f"Skip existing files: {args.skip}")
     print(f"Output Directory: {args.dir}")
-
     print("="*40+"\n")
 
 
-def YHKTDown(_courseID, _all=False, _list=None, _range=None, _dual=True, _vga=False, _video=False, _skip=False, _dir='./',  _max_workers=32):
-    print("----Getting Course Information----")
-
-    rqt_course = requests.get(f'https://cbiz.yanhekt.cn/v1/course?id={_courseID}&with_professor_badges=true', headers=headers)
-    courseInfo = rqt_course.json()['data']
-
-    print(courseInfo['name_zh'])
-
-    print("-----Getting Lesson List-----")
-    rqt_list = requests.get(f'https://cbiz.yanhekt.cn/v2/course/session/list?course_id={_courseID}', headers=headers)
-    lessonList = rqt_list.json()['data']
-    for i, lesson in enumerate(lessonList):
-        print(i, lesson['title'])
-
-    print("------Start Downloading------")
-
-    selectList = []
-    if _all:
-        selectList = list(range(len(lessonList)))
-    elif _list:
-        selectList = _list
-    elif _range:
-        selectList += list(range(_range[0][0], _range[0][1]))
-    else:
-        print("[Error] No lesson selected in args.")
-        print("Please use -A/--all, -L/--list, or -R/--range to select lessons.")
-        print("Example:")
-        print(f"\tpython main.py {_courseID} --all")
-        print(f"\tpython main.py {_courseID} --list 0 2 4")
-        print(f"\tpython main.py {_courseID} --range 3 5")
-        return
-
-    courseFullName = '-'.join([str(_courseID), courseInfo['name_zh'], courseInfo['professors'][0]['name']])
-    dirName = os.path.join(_dir, courseFullName)
-
-    if not os.path.exists(dirName):
-        os.makedirs(dirName)
-
-    for i in selectList:
-        video = lessonList[i]
-        fileName = video['title'].replace("/", "-")  # 防止文件名中的/导致路径错误
-
-        print(f"Downloading {fileName} --->")
-
-        videos = video['videos'][0]
-        # 下载投影录屏
-        if _vga or _dual:
-            if 'vga' in videos:  # 检查是否存在vga链接
-                if _skip and os.path.exists(f"{dirName}/{fileName}-VGA.mp4"):
-                    print(f"VGA seems already done. Skipping...")
-                else:
-                    print("VGA -->")
-                    M3u8Download(videos['vga'], dirName, fileName + '-VGA', max_workers=_max_workers)
-            else:
-                print(f"No VGA found.")
-
-        # 下载视频
-        if _video or _dual:
-            if 'main' in videos:  # 检查是否存在main链接
-                if _skip and os.path.exists(f"{dirName}/{fileName}-Video.mp4"):
-                    print(f"Video seems already done. Skipping...")
-                else:
-                    print("Video -->")
-                    M3u8Download(videos['main'], dirName, fileName + '-Video', max_workers=_max_workers)
-            else:
-                print(f"No Video found.")
+def progressPrint(current, total):
+    sys.stdout.write('\r[%-25s](%d/%d)' % ("*" * (100 * current // total // 4),
+                                           current, total))
+    sys.stdout.flush()
 
 
-def main():
+def runCli():
     parser = configArgs()
     args = parseArgs(parser)
     printArgs(args)
 
-    YHKTDown(args.courseID, args.all, args.list, args.range, args.dual, args.vga, args.video, args.skip, args.dir, args.max_workers)
+    yanhekt = YanHeKT(args.courseID, args.all, args.list, args.range, args.dual, args.vga, args.video, args.skip, args.dir, args.max_workers)
+    yanhekt.download(callback_prog=progressPrint)
 
 
-if __name__ == '__main__':
+def runGui():
+    gui = GUI()
+    gui.event_loop()
+
+
+def main():
+    # judge whether to run in GUI mode
+    if len(sys.argv) > 1 and sys.argv[1] == 'gui':
+        runGui()
+    else:
+        runCli()
+
+
+if __name__ == "__main__":
     main()

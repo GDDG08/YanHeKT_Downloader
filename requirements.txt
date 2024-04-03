@@ -1,1 +1,2 @@
 requests
+PySimpleGUI<=4.55.1
