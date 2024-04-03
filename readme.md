@@ -89,7 +89,7 @@ https://pypi.org/project/yanhekt/
 
 2. 开箱即食
 
-   <img src="assets/image-20240403163924034.png" alt="image-20240403163924034" style="zoom:33%;" />
+   <img src="assets/image-20240403163924034.png" width="250px"/>
 
    - 扔进链接或者courseID（可Ctrl-C V)
    - 获取课程信息
