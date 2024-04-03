@@ -30,6 +30,9 @@
    - 可以自定义输出文件夹位置
    - **详见 #食用方法**
    - 优化ffmpeg输出
+- 2024-4-3 (🌟🌟)添加了GUI交互界面
+   - 基于PySimpleGUI4，可以跨平台运行
+
 
 ## 使用前准备
 
@@ -67,10 +70,37 @@ https://pypi.org/project/yanhekt/
 
    - 如果最终视频没有合并，说明ffmpeg环境存在问题
 
+## 食用方法（GUI）
 
-## 食用方法
+1. 开启方法
 
-***注意：如果使用[本地源代码](#方法二：使用源代码)安装，请将本节中的`yanhekt`替换为`python main.py`***
+   1. 若使用pip安装
+
+      ```shell
+      yanhekt-gui
+      yanhekt gui
+      ```
+
+   2. 若源码运行
+
+      ```shell
+      python main.py gui
+      ```
+
+2. 开箱即食
+
+   <img src="assets/image-20240403163924034.png" alt="image-20240403163924034" style="zoom:33%;" />
+
+   - 扔进链接或者courseID（可Ctrl-C V)
+   - 获取课程信息
+   - 随意选择课时（Ctrl、Shift、鼠标拖拽都可多选）
+   - 设置一些参数，比如要下载什么视频
+   - 开下！
+
+
+## 食用方法（命令行）
+
+***注意：如果使用[本地源代码](#方法二：使用源代码)安装，请将本节中的`yanhekt`或`yanhekt-cli`替换为`python main.py`***
 
 1. 获取课程ID
 
@@ -162,9 +192,10 @@ https://pypi.org/project/yanhekt/
 仍处于初期开发阶段，欢迎提功能需求和PR
 
 ```python
-from yanhekt import YHKTDown
+from yanhekt import YanHeKT
 
-YHKTDown(25555, _all=True, _dual=True, _skip=True, _dir='./')
+yanhekt = YanHeKT(25555, _all=True, _dual=True, _skip=True, _dir='./')
+yanhekt.download()
 ```
 
 
@@ -175,7 +206,7 @@ YHKTDown(25555, _all=True, _dual=True, _skip=True, _dir='./')
    - ~~有需要的同学可以到[这个仓库](https://github.com/ZJC-GH/YanHeKT_Downloader) release中下载使用~~
    - ~~目前已合并到dev分支~~
 - ~~计划使用`argparse`完善命令行参数，优化下交互体验~~(2.2.0已实现)
-- （超大饼）在参数写完后整个简单的gui
+- ~~（超大饼）在参数写完后整个简单的gui~~
 
 
 ## 致谢

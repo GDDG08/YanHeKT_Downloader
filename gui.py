@@ -1,3 +1,12 @@
+'''
+Project      : 
+FilePath     : \OPENSOURCE\gui.py
+Descripttion : 
+Author       : GDDG08
+Date         : 2024-04-03 12:53:30
+LastEditors  : GDDG08
+LastEditTime : 2024-04-03 16:45:43
+'''
 import re
 import threading
 from yanhekt import YanHeKT
@@ -52,7 +61,7 @@ class GUI:
         frame_settings = [
             [sg.Text('Video Type:'), sg.Radio('Dual', group_id="RADIO_VIDEO_TYPE", key='DUAL', default=True), sg.Radio(
                 'VGA', group_id="RADIO_VIDEO_TYPE", key='VGA'), sg.Radio('Video', group_id="RADIO_VIDEO_TYPE", key='VIDEO')],
-            [sg.Text('Output Directory:'), sg.Input("./temp", size=(30, 2), key="OUTPUT_DIR", expand_x=True),
+            [sg.Text('Output Directory:'), sg.Input("./Downloads", size=(30, 2), key="OUTPUT_DIR", expand_x=True),
              sg.FolderBrowse(key='OUTPUT_DIR_BROWSE', initial_folder="./")],
             [sg.Checkbox('Skip Existing', default=True, key='SKIP_EXISTING')],
         ]
@@ -63,9 +72,12 @@ class GUI:
             # [sg.Frame('Lesson Selection', frame_lesson_selection)],
             [sg.Frame('Settings', frame_settings, expand_x=True)],
 
-            [sg.Button('Download Lessons', disabled=True)],
-            [sg.Output(size=(40, 10), expand_x=True, key='OUTPUT')],
-            [sg.ProgressBar(100, orientation='h', size=(40, 10), expand_x=True, key='PROGRESS_BAR')],
+            [sg.Column([
+                [sg.Button('Download Lessons', disabled=True)],
+                [sg.Output(size=(60, 10), expand_x=True, key='OUTPUT')],
+                [sg.ProgressBar(100, orientation='h', size=(40, 10), expand_x=True, key='PROGRESS_BAR')]
+            ], expand_x=True,element_justification='center')]
+            
         ]
 
         # Create the Window
