@@ -33,10 +33,15 @@
 - 2024-4-3 (🌟🌟)添加了GUI交互界面
    - 基于PySimpleGUI4，可以跨平台运行
 
-
 ## 使用前准备
 
-### 方法一：现已通过Pypi发布（推荐）
+### 方法〇：Windows发行（推荐）
+
+- 下载 [Releases](https://github.com/GDDG08/YanHeKT_Downloader/releases/latest)中的exe文件
+  - 建议下载带有ffmpeg版本，如`yanhekt-x.x.x-gui-ffmpeg.exe`
+- 直接运行，略过后边的部分
+
+### 方法一：现已通过Pypi发布
 
 https://pypi.org/project/yanhekt/
 
@@ -73,6 +78,8 @@ https://pypi.org/project/yanhekt/
 ## 食用方法（GUI）
 
 1. 开启方法
+
+   0. 若release exe，直接打开
 
    1. 若使用pip安装
 

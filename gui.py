@@ -5,7 +5,7 @@ Descripttion :
 Author       : GDDG08
 Date         : 2024-04-03 12:53:30
 LastEditors  : GDDG08
-LastEditTime : 2024-04-03 16:45:43
+LastEditTime : 2024-04-04 00:55:12
 '''
 import re
 import threading
@@ -68,7 +68,7 @@ class GUI:
 
         # Layout definition
         layout = [
-            [sg.Frame('Course Information', frame_course_info)],
+            [sg.Frame('Course Information', frame_course_info, expand_x=True)],
             # [sg.Frame('Lesson Selection', frame_lesson_selection)],
             [sg.Frame('Settings', frame_settings, expand_x=True)],
 
@@ -76,8 +76,8 @@ class GUI:
                 [sg.Button('Download Lessons', disabled=True)],
                 [sg.Output(size=(60, 10), expand_x=True, key='OUTPUT')],
                 [sg.ProgressBar(100, orientation='h', size=(40, 10), expand_x=True, key='PROGRESS_BAR')]
-            ], expand_x=True,element_justification='center')]
-            
+            ], expand_x=True, element_justification='center')]
+
         ]
 
         # Create the Window
@@ -88,7 +88,7 @@ class GUI:
             event, values = self.window.read()
             if event == sg.WIN_CLOSED:  # If user closes window
                 if self.td:
-                    self.td.stop()
+                    self.td.join()
                 break
             try:
                 # if event == 'Get Course ID':
@@ -164,3 +164,7 @@ class GUI:
 
     def callback_progress(self, current, total):
         self.window['PROGRESS_BAR'].update(current/total*100)
+
+if __name__ == '__main__':
+    gui = GUI()
+    gui.event_loop()
