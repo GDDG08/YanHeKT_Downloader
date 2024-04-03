@@ -5,7 +5,7 @@ Descripttion :
 Author       : GDDG08
 Date         : 2022-11-07 12:09:26
 LastEditors  : GDDG08
-LastEditTime : 2024-04-02 16:30:46
+LastEditTime : 2024-04-03 15:39:46
 '''
 import os
 import re
@@ -47,7 +47,7 @@ class M3u8Download:
     :param base64_key: base64编码的字符串
     """
 
-    def __init__(self, url, workDir, name, max_workers=64, num_retries=16, base64_key=None):
+    def __init__(self, url, workDir, name, max_workers=64, num_retries=16, base64_key=None, callback_progress=None):
 
         self._url = url
         self._token = None
@@ -65,6 +65,7 @@ class M3u8Download:
                          'Origin': 'https://www.yanhekt.cn',
                          'referer': 'https://www.yanhekt.cn',
                          }
+        self._callback_progress = callback_progress
 
         urllib3.disable_warnings()
 
@@ -200,9 +201,11 @@ class M3u8Download:
                                 if chunk:
                                     ts.write(chunk)
                         self._success_sum += 1
-                        sys.stdout.write('\r[%-25s](%d/%d)' % ("*" * (100 * self._success_sum // self._ts_sum // 4),
-                                                               self._success_sum, self._ts_sum))
-                        sys.stdout.flush()
+                        # sys.stdout.write('\r[%-25s](%d/%d)' % ("*" * (100 * self._success_sum // self._ts_sum // 4),
+                        #                                        self._success_sum, self._ts_sum))
+                        # sys.stdout.flush()
+                        if self._callback_progress:
+                            self._callback_progress(self._success_sum, self._ts_sum)
                     else:
                         self.refreshSignature()
                         self.download_ts(ts_url, name, num_retries - 1)
